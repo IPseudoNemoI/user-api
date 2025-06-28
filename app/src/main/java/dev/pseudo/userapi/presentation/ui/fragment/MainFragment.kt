@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pseudo.userapi.databinding.FragmentMainBinding
 import dev.pseudo.userapi.presentation.adapter.UserAdapter
@@ -22,7 +23,6 @@ import kotlinx.coroutines.launch
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-
     private val viewModel: MainViewModel by viewModels()
     private lateinit var adapter: UserAdapter
 
@@ -49,16 +49,18 @@ class MainFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.users.collect { userList ->
-                        adapter.submitList(userList)
-                        binding.swipeRefreshLayout.isRefreshing = false
-                    }
-                }
-                launch {
-                    viewModel.error.collect { error ->
-                        error?.let {
-                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is MainViewModel.UiState.Loading -> {
+                            binding.swipeRefreshLayout.isRefreshing = true
+                        }
+                        is MainViewModel.UiState.Success -> {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            adapter.submitList(state.users)
+                        }
+                        is MainViewModel.UiState.Error -> {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            Snackbar.make(requireView(), state.message, Snackbar.LENGTH_LONG).show()
                         }
                     }
                 }

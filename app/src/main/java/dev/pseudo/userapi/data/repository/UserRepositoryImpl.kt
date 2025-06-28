@@ -18,13 +18,17 @@ class UserRepositoryImpl @Inject constructor(
     override fun getUsers(forceRefresh: Boolean): Flow<List<User>> = flow {
         val cached = dao.getAll().map { it.toUser() }
 
-        if (cached.isNotEmpty() && !forceRefresh) {
-            emit(cached)
-        } else {
-            val fresh = api.getUsers().results
-            dao.clearAll()
-            dao.insertAll(fresh.map { it.toEntity() })
-            emit(fresh)
+        emit(cached)
+
+        if (forceRefresh || cached.isEmpty()) {
+            try {
+                val fresh = api.getUsers().results
+                dao.clearAll()
+                dao.insertAll(fresh.map { it.toEntity() })
+                emit(fresh)
+            } catch (e: Exception) {
+                throw e
+            }
         }
     }
 }
