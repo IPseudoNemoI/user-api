@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -54,10 +53,12 @@ class MainFragment : Fragment() {
                         is MainViewModel.UiState.Loading -> {
                             binding.swipeRefreshLayout.isRefreshing = true
                         }
+
                         is MainViewModel.UiState.Success -> {
                             binding.swipeRefreshLayout.isRefreshing = false
                             adapter.submitList(state.users)
                         }
+
                         is MainViewModel.UiState.Error -> {
                             binding.swipeRefreshLayout.isRefreshing = false
                             Snackbar.make(requireView(), state.message, Snackbar.LENGTH_LONG).show()
