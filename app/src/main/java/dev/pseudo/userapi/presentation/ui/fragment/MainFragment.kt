@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pseudo.userapi.databinding.FragmentMainBinding
@@ -37,7 +38,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = UserAdapter { user ->
-
+            val action = MainFragmentDirections.actionMainFragmentToInfoFragment(user)
+            findNavController().navigate(action)
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import dev.pseudo.userapi.R
 import dev.pseudo.userapi.data.model.User
 import dev.pseudo.userapi.databinding.ItemUserBinding
 
@@ -23,6 +24,9 @@ class UserAdapter(
 
             Glide.with(imageView)
                 .load(user.picture.medium)
+                .circleCrop()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
                 .into(imageView)
 
             root.setOnClickListener {

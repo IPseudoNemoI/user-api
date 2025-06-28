@@ -1,6 +1,5 @@
 package dev.pseudo.userapi.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,16 +22,18 @@ class MainViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    private var isLoaded = false
+
     fun loadUsers(forceRefresh: Boolean = false) {
+        if (isLoaded && !forceRefresh) return
+
         viewModelScope.launch {
             repository.getUsers(forceRefresh)
-                .catch { e ->
-                    _error.value = e.message
-                }
+                .catch { e -> _error.value = e.message }
                 .collect { userList ->
                     _users.value = userList
+                    isLoaded = true
                 }
         }
     }
-
 }
