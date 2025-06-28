@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
@@ -41,6 +42,11 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.androidx.swiperefreshlayout)
+
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.hilt.compiler)
 
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
