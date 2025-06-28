@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dev.pseudo.userapi.data.local.dao.UserDao
 import dev.pseudo.userapi.data.remote.RandomUserApi
 import dev.pseudo.userapi.data.repository.UserRepositoryImpl
 import dev.pseudo.userapi.domain.repository.UserRepository
@@ -32,7 +33,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: RandomUserApi): UserRepository {
-        return UserRepositoryImpl(api)
+    fun provideUserRepository(api: RandomUserApi, dao: UserDao): UserRepository {
+        return UserRepositoryImpl(api, dao)
     }
 }

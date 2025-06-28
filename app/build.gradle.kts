@@ -45,6 +45,10 @@ android {
 
 dependencies {
 
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+
     implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.dagger.hilt.android)
